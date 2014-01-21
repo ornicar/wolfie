@@ -45,14 +45,19 @@ case class Board(size: Int, tiles: Vector[Tile]) {
 }
 
 case class Hero(
-  id: Int,
-  name: String,
-  pos: Pos,
-  life: Int,
-  gold: Int,
-  mineCount: Int,
-  spawnPos: Pos,
-  crashed: Boolean)
+    id: Int,
+    name: String,
+    pos: Pos,
+    life: Int,
+    gold: Int,
+    mineCount: Int,
+    spawnPos: Pos,
+    crashed: Boolean) {
+
+  def afresh = life == 100 && pos == spawnPos
+
+  override def toString = s"Hero $id life:$life mine:$mineCount"
+}
 
 case class Game(
   id: String,
@@ -63,8 +68,11 @@ case class Game(
   finished: Boolean)
 
 case class Input(
-  game: Game,
-  hero: Hero,
-  token: String,
-  viewUrl: String,
-  playUrl: String)
+    game: Game,
+    hero: Hero,
+    token: String,
+    viewUrl: String,
+    playUrl: String) {
+
+  def enemies = game.heroes filter (_.id != hero.id)
+}

@@ -26,20 +26,37 @@ class GainsBot extends Bot {
     import input._
     import helper._
 
-    val tavernPath = ->(hero.pos, isTavern)
-    val minePath = ->(hero.pos, isNewMine)
+    if (hero.afresh) println("SPAWN")
+
+    val tavernPath = |~>(isTavern)
+    val minePath = |~>(isNewMine)
+    val enemyPaths = enemies map { h ⇒ (h, |~>(isEnemy(h.id))) }
 
     def aybabtu = minePath.isEmpty
-    def safeToGoMining = hero.life + mineLife + minePath.size * dayLife > 5
+
+    def goHunt = enemyPaths collectFirst {
+      case (enemy, path) if attackable(enemy, path.size) ⇒ {
+        println(s"hunt $enemy -> ${path.size} (${hero.life} HP)")
+        path
+      }
+    }
+    def goMine = if (hero.life + mineLife + minePath.size * dayLife > 5) Some(minePath) else None
+
+    def attackable(enemy: Hero, distance: Int) = {
+      def wonFight = distance < 3 && enemy.life < hero.life
+      def safePrey = enemy.mineCount > 0 &&
+        (Set(1, 2, 4, 5) contains distance) &&
+        (enemy.life + defendLife) < hero.life
+      def wealthyPrey = enemy.mineCount > 1 &&
+        distance < 6 &&
+        (enemy.life + defendLife) < hero.life
+      safePrey || wealthyPrey
+    }
 
     val path =
-      if (tavernPath.size == 1 && hero.life < 80) tavernPath
-      else if (aybabtu) {
-        if (tavernPath.size > 1) tavernPath
-        else Nil
-      }
-      else if (safeToGoMining) minePath
-      else tavernPath
+      if (tavernPath.size == 1 && hero.life < 80 && hero.gold >= beerGold) tavernPath
+      else if (aybabtu) if (tavernPath.size > 1) tavernPath else Nil
+      else goHunt orElse goMine getOrElse tavernPath
 
     ~path.headOption.flatMap(hero.pos.dirTo)
   }
@@ -65,11 +82,17 @@ case class Helper(input: Input) {
     case Tile.Mine(h) ⇒ h != Some(hero.id)
     case _            ⇒ false
   })
+  def isEnemy(pos: Pos) = is(pos, {
+    case Tile.Hero(h) ⇒ h != hero.id
+    case _            ⇒ false
+  })
+  def isEnemy(id: Int)(pos: Pos) = is(pos, Tile.Hero(id)==)
   def isAir(pos: Pos) = is(pos, Tile.Air==)
   def is(pos: Pos, f: Tile ⇒ Boolean) = game.board at pos exists f
 
   // shortest path to a tile satisfying goal function
-  def ->(from: Pos, goal: Pos ⇒ Boolean): Path = {
+  def |~>(goal: Pos ⇒ Boolean): Path = ~>(hero.pos, goal)
+  def ~>(from: Pos, goal: Pos ⇒ Boolean): Path = {
     @annotation.tailrec
     def step(paths: Vector[Path], visited: Set[Pos]): Path = paths match {
       case Vector() ⇒ Nil

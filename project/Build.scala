@@ -6,7 +6,7 @@ object VindiniumBot extends Build {
     id = "gainsbar",
     base = file("."),
     settings = Defaults.defaultSettings ++ Seq(
-      version := "1",
+      version := "2",
       scalaVersion := "2.10.3",
       resolvers += "Typesafe repository releases" at "http://repo.typesafe.com/typesafe/releases/",
       libraryDependencies ++= Seq(

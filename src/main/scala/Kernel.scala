@@ -2,6 +2,8 @@ package gainsbar
 
 object Main {
 
+  val key = "iyzc3pmd"
+
   val bot: Bot = new GainsBot
   // val bot: Bot = new RandomBot
 
@@ -87,7 +89,7 @@ object Main {
 
   def makeServer = (
     Option(System.getProperty("server")) getOrElse "http://vindinium.jousse.org",
-    System.getProperty("key")
+    Option(System.getProperty("key")) getOrElse key
   ) match {
       case (_, null)  ⇒ Left("Specify the user key with -Dkey=mySecretKey")
       case (url, key) ⇒ Right(new Server(url + "/api", key))
