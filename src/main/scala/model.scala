@@ -56,6 +56,9 @@ case class Hero(
 
   def afresh = life == 100 && pos == spawnPos
 
+  def friend(h: Hero) = h.name == name
+  def enemy(h: Hero) = !friend(h)
+
   override def toString = s"Hero $id life:$life mine:$mineCount"
 }
 

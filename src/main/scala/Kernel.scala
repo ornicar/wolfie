@@ -2,7 +2,7 @@ package gainsbar
 
 object Main {
 
-  val key = "iyzc3pmd"
+  val key = "lp0s53hw" // wolfie
 
   val bot: Bot = new GainsBot
   // val bot: Bot = new RandomBot

@@ -77,13 +77,15 @@ case class Helper(input: Input) {
 
   import input._
 
+  lazy val enemyIds = input.game.heroes filter (_ enemy hero) map (_.id) toSet
+
   def isTavern(pos: Pos) = is(pos, Tile.Tavern==)
   def isNewMine(pos: Pos) = is(pos, {
-    case Tile.Mine(h) ⇒ h != Some(hero.id)
+    case Tile.Mine(h) ⇒ h.fold(true)(enemyIds)
     case _            ⇒ false
   })
   def isEnemy(pos: Pos) = is(pos, {
-    case Tile.Hero(h) ⇒ h != hero.id
+    case Tile.Hero(h) ⇒ enemyIds(h)
     case _            ⇒ false
   })
   def isEnemy(id: Int)(pos: Pos) = is(pos, Tile.Hero(id)==)
