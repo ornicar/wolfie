@@ -3,10 +3,9 @@ import sbt._, Keys._
 object VindiniumBot extends Build {
 
   lazy val bot = Project(
-    id = "vindinium-bot",
+    id = "gainsbar",
     base = file("."),
     settings = Defaults.defaultSettings ++ Seq(
-      organization := "org.jousse",
       version := "0.1",
       scalaVersion := "2.10.3",
       resolvers += "Typesafe repository releases" at "http://repo.typesafe.com/typesafe/releases/",

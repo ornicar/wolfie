@@ -1,4 +1,4 @@
-package bot
+package gainsbar
 
 object Dir extends Enumeration {
   type Dir = Value
@@ -18,6 +18,13 @@ case class Pos(x: Int, y: Int) {
     case East  ⇒ copy(y = y + 1)
     case West  ⇒ copy(y = y - 1)
   }
+
+  def dirTo(pos: Pos): Option[Dir] =
+    if (pos.x > x) Some(South)
+    else if (pos.x < x) Some(North)
+    else if (pos.y > y) Some(East)
+    else if (pos.y < y) Some(West)
+    else None
 
   def isIn(size: Int) = (x >= 0 && x < size && y >= 0 && y < size)
 }

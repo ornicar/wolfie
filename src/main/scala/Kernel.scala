@@ -1,8 +1,9 @@
-package bot
+package gainsbar
 
 object Main {
 
-  val bot: Bot = new RandomBot
+  val bot: Bot = new GainsBot
+  // val bot: Bot = new RandomBot
 
   def main(args: Array[String]) = makeServer match {
     case Left(error) ⇒ println(error)

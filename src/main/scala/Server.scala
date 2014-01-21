@@ -1,4 +1,4 @@
-package bot
+package gainsbar
 
 import play.api.libs.json._
 import scalaj.http.{ Http, HttpOptions }
