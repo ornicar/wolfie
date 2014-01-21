@@ -47,8 +47,6 @@ class GainsBot extends Bot {
 
 object GainsBot {
 
-  val bfsMaxDepth = 1000
-
   val maxLife = 100
   val beerLife = 50
   val beerGold = -2
@@ -73,28 +71,21 @@ case class Helper(input: Input) {
   // shortest path to a tile satisfying goal function
   def ->(from: Pos, goal: Pos ⇒ Boolean): Path = {
     @annotation.tailrec
-    def step(paths: Vector[Path], visited: Set[Pos], it: Int): Path =
-      if (it > GainsBot.bfsMaxDepth) {
-        println("Reached BFS max depth")
-        Nil
-      }
-      else paths match {
-        case Vector() ⇒ Nil
-        case path +: rest ⇒ {
-          val on = path.head
-          if (visited(on)) step(rest, visited, it + 1) else {
-            on.neighbors find goal match {
-              case Some(found) ⇒ (found :: path).reverse drop 1
-              case None ⇒ {
-                val nextPaths = (airNeighbors(on) -- visited) map (_ :: path)
-                // print(s"${nextPaths.size},${(rest ++ nextPaths).size}|")
-                step(rest ++ nextPaths, visited + on, it + 1)
-              }
-            }
+    def step(paths: Vector[Path], visited: Set[Pos]): Path = paths match {
+      case Vector() ⇒ Nil
+      case path +: rest ⇒ {
+        val on = path.head
+        if (visited(on)) step(rest, visited) else {
+          on.neighbors find goal match {
+            case Some(found) ⇒ (found :: path).reverse drop 1
+            case None ⇒
+              val nextPaths = (airNeighbors(on) -- visited) map (_ :: path)
+              step(rest ++ nextPaths, visited + on)
           }
         }
       }
-    step(Vector(List(from)), Set.empty, 0)
+    }
+    step(Vector(List(from)), Set.empty)
   }
 
   def airNeighbors(pos: Pos) = pos.neighbors filter isAir
