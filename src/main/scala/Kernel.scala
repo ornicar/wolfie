@@ -5,6 +5,9 @@ object Main {
   val bot: Bot = new GainsBot
   // val bot: Bot = new RandomBot
 
+  val measurePerf = true
+  var times = collection.mutable.ListBuffer[Int]()
+
   def main(args: Array[String]) = makeServer match {
     case Left(error) ⇒ println(error)
     case Right(server) ⇒ args match {
@@ -46,8 +49,15 @@ object Main {
   }
 
   def steps(server: Server, input: Input) {
+    if (measurePerf) times = collection.mutable.ListBuffer()
     failsafe {
       step(server, input)
+    }
+    if (measurePerf && times.nonEmpty) {
+      val avg = times.sum / times.size
+      val high = times.sorted.last
+      println(s"\nAverage time: $avg ms.")
+      println(s"Highest time: $high ms.")
     }
   }
 
@@ -65,7 +75,13 @@ object Main {
   def step(server: Server, input: Input) {
     if (!input.game.finished) {
       print(".")
-      step(server, server.move(input.playUrl, bot move input))
+      val dir = if (measurePerf) {
+        val startTime = System.currentTimeMillis
+        val d = bot move input
+        times += (System.currentTimeMillis - startTime).toInt
+        d
+      } else bot move input
+      step(server, server.move(input.playUrl, dir))
     }
   }
 
