@@ -26,8 +26,6 @@ class GainsBot extends Bot {
     import input._
     import helper._
 
-    if (hero.afresh) println("SPAWN")
-
     val tavernPath = |~>(isTavern)
     val minePath = |~>(isNewMine)
     val enemyPaths = enemies map { h ⇒ (h, |~>(isEnemy(h.id))) }
@@ -35,10 +33,7 @@ class GainsBot extends Bot {
     def aybabtu = minePath.isEmpty
 
     def goHunt = enemyPaths collectFirst {
-      case (enemy, path) if attackable(enemy, path.size) ⇒ {
-        println(s"hunt $enemy -> ${path.size} (${hero.life} HP)")
-        path
-      }
+      case (enemy, path) if attackable(enemy, path.size) ⇒ path
     }
     def goMine = if (hero.life + mineLife + minePath.size * dayLife > 5) Some(minePath) else None
 
@@ -77,7 +72,12 @@ case class Helper(input: Input) {
 
   import input._
 
-  lazy val enemyIds = input.game.heroes filter (_ enemy hero) map (_.id) toSet
+  val teamPlay: Boolean = game.heroes.map(_.name).distinct.size > 1
+  val heroIds: Set[Int] = input.game.heroes map (_.id) toSet
+  val enemies: List[Hero] =
+    if (teamPlay) game.heroes filter (_.name != hero.name)
+    else game.heroes filter (_.id != hero.id)
+  val enemyIds: Set[Int] = enemies.map(_.id).toSet
 
   def isTavern(pos: Pos) = is(pos, Tile.Tavern==)
   def isNewMine(pos: Pos) = is(pos, {

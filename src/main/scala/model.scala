@@ -63,19 +63,19 @@ case class Hero(
 }
 
 case class Game(
-  id: String,
-  turn: Int,
-  maxTurns: Int,
-  heroes: List[Hero],
-  board: Board,
-  finished: Boolean)
+    id: String,
+    turn: Int,
+    maxTurns: Int,
+    heroes: List[Hero],
+    board: Board,
+    finished: Boolean) {
+
+  def heroById(id: Int) = heroes find (_.id == id)
+}
 
 case class Input(
-    game: Game,
-    hero: Hero,
-    token: String,
-    viewUrl: String,
-    playUrl: String) {
-
-  def enemies = game.heroes filter (_.id != hero.id)
-}
+  game: Game,
+  hero: Hero,
+  token: String,
+  viewUrl: String,
+  playUrl: String)

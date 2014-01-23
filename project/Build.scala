@@ -2,11 +2,13 @@ import sbt._, Keys._
 
 object VindiniumBot extends Build {
 
+  val name = "wolfie"
+
   lazy val bot = Project(
-    id = "gainsbar",
+    id = name,
     base = file("."),
     settings = Defaults.defaultSettings ++ Seq(
-      version := "wolfie",
+      version := name,
       scalaVersion := "2.10.3",
       resolvers += "Typesafe repository releases" at "http://repo.typesafe.com/typesafe/releases/",
       libraryDependencies ++= Seq(
