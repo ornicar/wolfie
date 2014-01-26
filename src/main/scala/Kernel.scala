@@ -88,7 +88,7 @@ object Main {
   }
 
   def makeServer = (
-    Option(System.getProperty("server")) getOrElse "http://vindinium.jousse.org",
+    Option(System.getProperty("server")) getOrElse "http://vindinium.org",
     Option(System.getProperty("key")) getOrElse key
   ) match {
       case (_, null)  ⇒ Left("Specify the user key with -Dkey=mySecretKey")
