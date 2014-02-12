@@ -4,7 +4,7 @@ object Main {
 
   val key = "lp0s53hw" // wolfie
 
-  val bot: Bot = new GainsBot
+  val bot = new GainsBot
   // val bot: Bot = new RandomBot
 
   val measurePerf = true
@@ -35,7 +35,10 @@ object Main {
       println(s"[$it/$games] Start arena game ${input.viewUrl}")
       steps(server, input)
       println(s"\n[$it/$games] Finished arena game ${input.viewUrl}")
-      if (it < games) oneGame(it + 1)
+      if (it < games) {
+        Thread sleep 4000 // let other bots connect first
+        oneGame(it + 1)
+      }
     }
     failsafe {
       oneGame(1)
