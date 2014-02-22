@@ -1,11 +1,10 @@
-package gainsbar
+package vindinium.wolfie
 
 object Main {
 
-  val key = "lp0s53hw" // wolfie
+  val key = "???"
 
-  val bot = new GainsBot
-  // val bot: Bot = new RandomBot
+  val bot = new Wolfie
 
   val measurePerf = true
   var times = collection.mutable.ListBuffer[Int]()
@@ -85,7 +84,8 @@ object Main {
         val d = bot move input
         times += (System.currentTimeMillis - startTime).toInt
         d
-      } else bot move input
+      }
+      else bot move input
       step(server, server.move(input.playUrl, dir))
     }
   }

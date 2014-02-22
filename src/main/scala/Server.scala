@@ -1,4 +1,4 @@
-package gainsbar
+package vindinium.wolfie
 
 import play.api.libs.json._
 import scalaj.http.{ Http, HttpOptions }

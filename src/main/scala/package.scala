@@ -1,4 +1,6 @@
-package object gainsbar {
+package vindinium 
+
+package object wolfie {
 
   type Path = List[Pos]
 
@@ -15,7 +17,7 @@ package object gainsbar {
     }
   }
 
-  import gainsbar.Dir.Dir
+  import vindinium.wolfie.Dir.Dir
 
   implicit final class OptionDirZero(od: Option[Dir]) {
     def unary_~ = od getOrElse Dir.Stay

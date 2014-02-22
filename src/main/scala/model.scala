@@ -1,4 +1,4 @@
-package gainsbar
+package vindinium.wolfie
 
 object Dir extends Enumeration {
   type Dir = Value
